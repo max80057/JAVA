@@ -1,0 +1,26 @@
+//時間操作
+String dateStr = "2019-03-27 12:33:53";
+SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//時間格式化
+Date date = sdf.parse(dateStr);
+
+Calendar now = Calendar.getInstance();
+now.setTime(date);//設定時間
+String vyear = String.valueOf(now.get(Calendar.YEAR));
+String vmonth = String.format("%02d", now.get(Calendar.MONTH)+1);//Calendar.MONTH的值 1月為0...12月為11
+String vdate = String.format("%02d", now.get(Calendar.DAY_OF_MONTH));
+String vhours =  String.format("%02d",now.get(Calendar.HOUR_OF_DAY));
+String vminutes = String.format("%02d",now.get(Calendar.MINUTE));
+String vseconds = String.format("%02d",now.get(Calendar.SECOND));
+int week =now.get(Calendar.DAY_OF_WEEK -1);//Calendar.DAY_OF_WEEK的值 禮拜日為1....禮拜六為7
+
+sdf = new SimpleDateFormat("E");//星期幾的格式化
+String weekStr = sdf.format(date);
+
+System.out.println("vyear = " + vyear);
+System.out.println("vmonth = " + vmonth);
+System.out.println("vdate = " + vdate);
+System.out.println("vhours = " + vhours);
+System.out.println("vminutes = " + vminutes);
+System.out.println("vseconds = " + vseconds);
+System.out.println("week = " + week);
+System.out.println("weekStr = " + weekStr);
