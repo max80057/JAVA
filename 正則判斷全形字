@@ -1,0 +1,15 @@
+Matcher matcher =null;
+String str="ＡＧＡＳＫＪＧ";
+String str2 = “agaskjg”;
+
+全形字
+matcher = Pattern.compile("^[\\uFE30-\\uFFA0]*$").matcher(str);//全形字
+
+System.out.println("matcher = " + matcher.find());
+
+matcher = Pattern.compile("^[\\uFE30-\\uFFA0]*$").matcher(str2);
+System.out.println("matcher = " + matcher.find());
+
+
+第一個結果會是true
+第二個結果會是false
