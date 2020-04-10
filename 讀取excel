@@ -1,0 +1,56 @@
+JAVA讀取excel可以使用的methood
+
+
+//首先先取得excel
+Workbook workbook = Workbook.getWorkbook(new File(檔案path));
+
+//取得第一張excel
+Sheet sheet = workbook.getSheet(0);
+
+
+//獲取第x行，第y列的值
+//要注意的是透過getContents()取得的值都是string的物件
+Cell cell00 = rs.getCell(x, y);
+String str = cell.getContents();
+
+
+//想查看物件可以使用 getTpye()，總共有3種，文字、數字、日期
+//判別式可以用以下的方法
+String type = cell.getType();
+
+if(type == CellType.LABEL)
+out.print("此欄位資料為文字"):
+
+if(type == CellType.NUMBER)
+out.print("此欄位資料為數字"):
+
+if(type == CellType.DATE)
+out.print("此欄位資料為時間"):
+
+
+
+
+//當然也可以不要單獨取得某一欄位的資料
+//一樣取得excel的資料
+Workbook workbook = Workbook.getWorkbook(new File(檔案path));
+Sheet sheet = workbook.getSheet(0);
+
+//然後取得某一行的資料，然後有幾行
+Cell[] cell = sheet.getRow();
+int sheetRows = sheet.getRows();
+
+//或者某一列的資料，共有幾列
+Cell[] cell = sheet.getColumn();
+int sheetColumns = sheet.getColumns();
+
+//結合以上的東西，我們就可以找出所有的資料，比如說列出每一行的資料
+for (int i = 0; i < sheetRows; i++) 
+{
+	Cell[] cell = sheet.getRow(i);
+	out.print("第 " + i + " 行，第1列" + cell[0]);
+	out.print("第 " + i + " 行，第2列" + cell[1]);
+	out.print("第 " + i + " 行，第3列" + cell[2]);
+							.
+							.
+							.
+}
