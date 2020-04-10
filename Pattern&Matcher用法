@@ -1,0 +1,22 @@
+下面是一個實際運用的例子，用來比對字串
+
+  String testString= "0911-111111, 02-22222222, 0922-222222, 03-33333333, 9999-887531";
+  Pattern  pattern = Pattern.compile("\\d{4}-\\d{6}");
+  Matcher matcher = pattern.matcher(testString);	
+
+  while (matcher.find()){
+    String str = matcher.group();
+    out.print("比對的字串為 = " + str + "<br>");
+  };
+
+
+先用Pattern.compile來做想要比對的字串(正則式)，
+用pattern.matcher來執行比對
+然後用matcher.find()找出是否有符合的字串
+取出內容則是使用matcher.group();
+
+以上的例子實際輸出就會是：
+
+比對的字串為 = 0911-111111
+比對的字串為 = 0922-222222
+比對的字串為 = 9999-887531
