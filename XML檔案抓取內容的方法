@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding=" UTF-8" ?>
+<company>
+ 	<staff id="1001">
+  		<firstname>yong</firstname>
+  		<lastname>mook kim</lastname>
+  		<nickname>mkyong</nickname>
+  		<salary>100000</salary>
+ 	</staff>
+ 	<staff id="2001">
+  		<firstname>low</firstname>
+  		<lastname>yin fong</lastname>
+  		<nickname>fong fong</nickname>
+  		<salary>200000</salary>
+ 	</staff>
+</company>
+
+這邊有一個XML回傳的內容，型態是Element，名稱為xmlData。
+XML如上面所見，是一個樹狀的列表，以這個為範例的話，
+company這個元素是最上層，
+底下有兩個次元素staff，用id作區分 
+staff再下去還有他的次元素firstname、lastname、nickname、salary等等
+每一個元素對於這個xmlData來說都是一個Child，所以以上述來說
+company就是最上層的Child，
+次元素staff則是company的Child，以下類推
+
+最後要注意的是每一個元素型態都是Element。
+
+
+有了基本認識以後就可以開始取得資料了!
+
+
+
+
+
+
+
+
+
+如果你想直接取得某個值的情況
+比如說你想取得第二個staff的nickname
+Element el;
+//取得最上層的元素，getChild裡面放元素名稱
+el = xmlData.getChild("company "); 
+//因為staff有好幾個，可以用getChildren這個方法取得全部的元素，型態為List。
+List<Element> elData = el.getChildren("staff"); 
+//id是2001在list的第二個位置
+//取得內容，使用getAttributeValue這個方法
+String nickname = elData..get(1). getChildText("nickname ");
+System.out.println("nickname  = " + nickname);
+
+上述的getChildText是取得tag夾住的內容，
+那如果要取得staff的id怎麼做呢?很簡單
+
+Element el;
+el = xmlData.getChild("company "); 
+List<Element> elData = el.getChildren("staff"); 
+
+// getAttributeValue裡面要帶名稱
+String id = elData. getAttributeValue("id");
+System.out.println("nickname = " + nickname);
+顯示結果為
+nickname = fong fong
+
+上述兩種取得的方法，不同的地方在於
+一個是取得tag夾住的內容，ex:
+<nickname>fong fong</nickname>
+一個是跟在tag後面的內容，ex:
+<staff id="2001"> 
+因為第二種的狀況下可能會有下列這種帶複數個參數的情況，
+<staff id="2001" buildDate="2016-05-09" sex="male">
+
+如果你想取得某個child的數量
+比如說想知道staff的數量
+Element el;
+el = xmlData.getChild("company "); 
+//抓要知道的元素的上一層，staff的上一層為company
+int count = el. getContentSize(0;
+System.out.println("count = " + count);
+顯示結果為
+count = 2
