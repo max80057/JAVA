@@ -1,0 +1,30 @@
+HashtableInt用法
+
+這個方法繼承Hashtable，一樣是key & value的模式，
+不過他這個value就是只限定為數字而已，可以是string也可以是int
+，不太一樣的是Hashtable使用的是put(key,vlaue)，
+HashtableInt使用的是add(key,value)。要特別注意一下
+
+這個方法可以把同樣key的value做加減，方法如下
+
+HashtableInt hashtableInt = new HashtableInt();
+
+hashtableInt.add("aaa","1");
+hashtableInt.add("bbb","3");
+hashtableInt.add("ccc","5");
+
+
+hashtableInt.add("aaa",8);
+hashtableInt.add("bbb",-7);
+hashtableInt.add("ccc",-9);
+
+System.out.println("aaa = " + hashtableInt.get("aaa"));
+System.out.println("bbb = " + hashtableInt.get("bbb"));
+System.out.println("ccc = " + hashtableInt.get("ccc"));
+
+
+出來的結果就是
+
+aaa = 9
+bbb = -4
+ccc = -4
