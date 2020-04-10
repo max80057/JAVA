@@ -1,0 +1,33 @@
+讀寫檔案的方法
+
+String path = "/home/shopping99/123.txt"
+String strLine="";
+FileReader fr = new FileReader(path);
+BufferedReader br= new BufferedReader(fr);
+
+while(br. readLine() != null ){
+strLine = br.readLine();
+out.print(strLine);
+}
+
+br.close();
+
+首先new一個FileReader來取得檔案內的文字
+使用BufferedReader取得輸入
+使用br. readLine()那行的內容
+
+-------------------------------------------------------------------------------------------------------
+然後寫入的方法雷同，new一個FileWriter去取得檔案內容
+使用BufferedWriter取得輸入
+使用bw.write(text)來寫入
+
+String text = "我要寫入的內容";
+FileWriter fw = new FileWriter(filePath + fileName);
+BufferedWriter bw = new BufferedWriter(fw);
+bw.write(text);
+bw.close();
+
+
+
+讀取跟寫入都要特別注意一定要close()
+不然程式會認為你還在讀取(寫入)中，以至於程式一直開著那個檔案，直到自行斷掉為止，這樣可能會發生不可預期的錯誤，切記!
