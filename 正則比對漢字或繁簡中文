@@ -1,0 +1,14 @@
+String strChina = "图书馆";
+String strChinese = "圖書館";
+String strJapan = "齢";
+Matcher matcher =null;
+Matcher matcher2 =null;
+String str="";
+
+
+matcher = Pattern.compile("^[\u4E00-\\u9fa5]*$").matcher(str);//限定漢字(含日文漢字)
+matcher2 = Pattern.compile("^[\u4E00-\\u9FFF]*$").matcher(str);//限定中文(繁體簡體)
+
+
+matcher可以找到所有的中文字，包含日文的漢字都可以算在裡面
+matcher2則是只限定繁體字跟簡體字
