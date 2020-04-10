@@ -1,0 +1,36 @@
+建立一個SMTP認證功能的java
+
+public class SMTPAuthenticator extends javax.mail.Authenticator {
+  private String User;
+  private String Password;
+
+  public SMTPAuthenticator(String user, String password) {
+    User = user;
+    Password = password;
+  }
+  
+  public PasswordAuthentication getPasswordAuthentication() {
+    return new PasswordAuthentication(User, Password);
+  }
+
+}
+
+
+建立一個寄信用的JSP
+
+  Properties props = new Properties();
+  props.put("mail.smtp.host", MailServer);
+ // MailServer可以是外部的信箱，如gmail,yahoo
+  props.put("mail.smtp.port", "25");
+  props.put("mail.smtp.auth", "true");
+ //採用認證,因為使用外部smtp主機
+
+  props.put("mail.smtp.connectiontimeout","1000");
+//設定Socket的連接時間，單位是毫秒
+  props.put("mail.smtp.timeout","2000");
+//設定信件I/O的時間，單位是毫秒
+  Session se = null;
+
+  se = Session.getInstance(props, new SMTPAuthenticator(account,password));
+//account為信箱帳號名稱，如:  xxxx@gmail.com
+// password為信箱密碼
