@@ -1,0 +1,184 @@
+//收件者、主旨、內文的設定
+//  String[] To = new String[0];
+  List<String> To = new ArrayList<String>();
+  String Subject = ""; //主旨
+  String sendMsgHtml = ""; //HTML內文
+  boolean mailDebug=true;
+
+  //郵件資訊設定
+  String from = ""; //發信人信箱
+  String fromName = ""; //發信人(顯示的文字)
+  String password = "";//發信人信箱
+//  String smtpServer = "ASPMX.L.GOOGLE.com"; //Mail Server，只能發gmail
+  String smtpServer = "smtp.gmail.com";//Mail Server，可以發非gmail的信箱
+  Date nowTime = new Date();
+
+  //接受上傳檔案的內容
+  MultipartRequest multipartRequest = null;
+  String saveDirectory = "/email";
+  String pathFile = "";
+  String fileName = "";
+  int maxPostSize = 5 * 1024 * 1024;
+  String error = "";
+
+  File folder = new File(saveDirectory);
+  if (!folder.exists()) {
+    folder.mkdirs();
+  }
+  multipartRequest = new MultipartRequest(request, saveDirectory, maxPostSize, "utf-8");
+  Enumeration files = multipartRequest.getFileNames();
+  if (files.hasMoreElements()) {
+    String name = (String) files.nextElement();
+    fileName = multipartRequest.getFilesystemName(name);
+  }
+  pathFile = saveDirectory + "/" + fileName;
+
+  if (!new File(pathFile).exists()) {
+    error = "匯入檔案不存在!!!";
+    throw new Exception(error);
+  }
+
+  if(!multipartRequest.getParameter("fromSelect").equals("")){
+    from = multipartRequest.getParameter("fromSelect").trim();
+    fromName = from;
+  }else if (!multipartRequest.getParameter("fromKey").equals("") && multipartRequest.getParameter("fromSelect").equals("")){
+    from = multipartRequest.getParameter("fromKey").trim();
+    fromName = from;
+    password = multipartRequest.getParameter("fromKeyPassword");
+  }
+  if(!(multipartRequest.getParameter("Recipient").isEmpty()) ||  !(multipartRequest.getParameter("Recipient").equals(""))){
+    String[] tmp = multipartRequest.getParameter("Recipient").trim().split(",");
+    for(int i = 0 ;i < tmp.length;i++){
+      To.add(tmp[i]);
+    }
+  }
+  if(!(multipartRequest.getParameter("subject").isEmpty()) ||  !(multipartRequest.getParameter("subject").equals(""))){
+    Subject = multipartRequest.getParameter("subject").trim();
+  }
+
+
+  JavaxMailService mt = new JavaxMailService();
+
+  //exchange的smtp設定
+//  Properties props = new Properties();
+//  props.put("mail.smtp.host", smtpServer);
+////  props.put("mail.smtp.port", "25");
+//  props.put("mail.smtp.port", "465");
+//  props.put("mail.smtp.auth", "true"); //採用認證,因為使用外部smtp主機
+//
+//  props.put("mail.smtp.connectiontimeout","1000");
+//  props.put("mail.smtp.timeout","2000");
+
+  //gmail的smtp設定
+  Properties props = new Properties();
+  props.put("mail.smtp.host", smtpServer);
+  props.put("mail.smtp.auth", "true");
+  props.put("mail.smtp.ssl.enable", "true");
+  props.put("mail.smtp.port", "465");
+  props.put("mail.smtp.socketFactory.port", "465");
+  props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+
+  MimeMessage msg = null;
+  Session se = null;
+
+  try{
+    //做STMP認證
+    if (password.equals("") || password.isEmpty()) {
+      se = Session.getInstance(props, new SMTPAuthenticator(from));
+    }else{
+      se = Session.getInstance(props, new SMTPAuthenticator(from,password));
+    }
+
+    se.setDebug(mailDebug); //debug模式
+
+	//發信的信箱(from)可以和STMP認證的信箱不同，只要在gmail裡面設定=>帳號內的"以這個地址寄送郵件："額外設定信箱即可
+    if(from.equals("andre@nineder.com")) {
+      from = "xxxx@gmail.com";
+      fromName = "xxxx神秘人";
+    }
+	
+    //設定寄件者
+    msg = new MimeMessage(se); //建立新的MimeMessage物件
+    msg.setFrom(new InternetAddress(from,fromName,"UTF-8"));//設定發信者信箱、發信者顯示名稱、使用編碼類型
+
+    //其他設定
+    msg.setSubject(Subject,"utf-8");//設定郵件主旨，一定要設定utf-8，不然會變成亂碼
+    msg.setSentDate(nowTime); //設定發送時間
+
+
+    //建立多內容 Multpart 郵件物件
+    Multipart multipart = new MimeMultipart();
+
+    MimeBodyPart mbp = new MimeBodyPart();
+
+    //建立html格式內容
+    //讀取每行內容
+    try {
+      BufferedReader bufferedreader =
+          new BufferedReader(new InputStreamReader(new FileInputStream(pathFile), "utf-8"));
+      while (true) {
+        String s1 = bufferedreader.readLine();
+        if (s1 != null) {
+          sendMsgHtml = sendMsgHtml + s1 + "\n";
+        } else {
+          bufferedreader.close();
+        }
+      }
+    } catch (Exception e) {
+      error = error + e;
+    }
+    //將內容加入Content中
+//    mbp.setContent(sendMsgHtml,"text/html;charset=big5");
+    mbp.setContent(sendMsgHtml,"text/html;charset=utf-8");
+
+    //將內容加入 Multpart 郵件物件
+    multipart.addBodyPart(mbp);
+
+    //附加檔案
+//    mbp = new MimeBodyPart();
+//    DataSource fds = new FileDataSource("report\\附件.txt");
+//    mbp.setDataHandler(new DataHandler(fds));
+//    mbp.setFileName(javax.mail.internet.MimeUtility.encodeText(fds.getName(), "Big5", "B"));
+
+    //將附加檔案內容加入 Multpart 郵件物件
+//    multipart.addBodyPart(mbp);
+
+
+    //對 Multpart 郵件物件設定訊息
+    msg.setContent(multipart);
+
+
+    //設定收件者TO資料
+    SMTPMailService Ss= new SMTPMailService();
+
+    int count = 0;
+    int success = 0;
+    InternetAddress [] tmp = new InternetAddress[1];
+    List<String> failList = new ArrayList<String>();
+    for (int i= 0 ; i < To.size();i++) {
+      tmp[0] = new InternetAddress(To.get(i));
+      msg.setRecipients(Message.RecipientType.TO,tmp);
+      if (Ss.sendMail(msg) == 1) {
+      logger.info("### HttpClient: - Send Email Success!");
+        success++;
+      } else {
+      logger.info("### HttpClient: - Send Email Fail!");
+        failList.add(To.get(i));
+      }
+      count++;
+    }
+
+    out.print("寄送失敗Email: " + failList + "</br>");
+
+    int a = 0;
+    double b= 0;
+    a= (int)((success*1.0/count)*10000);
+    b = a/100.0;
+
+    out.print("成功率 = " + b + "%</br>");
+  }catch(Exception e){
+    e.printStackTrace();
+  }finally{
+    if(msg!=null) msg = null;
+    if(session!=null) session = null;
+  }
