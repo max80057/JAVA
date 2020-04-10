@@ -1,0 +1,63 @@
+一般而言要使用select去資料庫找資料的時候
+PreparedStatement和ResultSet這兩個物件來執行SQL和接執行的結果。
+再使用ResultSet.next()來尋找所有資料如下列程式碼:
+
+String sql = "select * from table_name"
+
+PreparedStatement pstmt = db. prepareStatement(sql);
+ResultSet rs = pstmt.executeQuery();
+
+while(rs.next()){
+system.out.println( rs.getString("columnLabel "));
+}
+如此就可以印出某欄位的所有資料。
+
+
+但是如果你想重複使用這個ResultSet就會失敗
+
+比如說select出來的結果有10筆資料，rs.next()到了最後一筆，
+你想再使用ResultSet儲存的結果來再跟其他東西做一次比對，
+所以執行了rs. beforeFirst();
+想把他的指標移回最前面，就會出現這個結果
+
+org.postgresql.util.PSQLException: 操作要求可捲動的 ResultSet，但此 ResultSet 是 FORWARD_ONLY。
+
+
+所以要改成可捲動的ResultSet要這樣做
+Statement st = db.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+
+ResultSet rs= st.executeQuery(sel_str);
+
+
+然後就可以使用這個方法rs. beforeFirst();來將指標移回最前面。
+
+
+
+活用的例子如下：
+
+1.比如說你想知道select出來的資料有幾筆，你可以這樣做:
+
+rs.last();
+int lastNumeber = rs.getRow();
+rs. beforeFirst();
+
+lastNumeber就是最後一行的行數，
+然後再移動指標回到最前面就可以繼續使用
+
+2.比如說你想在select到東西的時候才繼續往下，你可以這樣做
+
+if(rs.next()){
+rs. beforeFirst();
+//TODO
+}else{
+//TODO
+}
+
+這邊要注意的是，普通你可能會想使用
+if(rs != null){
+//TODO
+}else{
+//TODO
+}
+
+但是就算select的結果是沒有任何東西，他也不會是null，所以這個if永遠是true
