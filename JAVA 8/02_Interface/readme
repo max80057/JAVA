@@ -1,0 +1,9 @@
+output:
+override do1
+override do2
+test do3
+test2 do3
+
+--------------------
+以前在Interface上新增方法時，所有繼承的方法都要強制重寫這個方法，違反開放封閉原則。
+JAVA 8 新增default的詞，可以在Interface內加一個可以使用的方法，且不強制繼承的對象重寫這個方法，可以靈活的新增方法。
