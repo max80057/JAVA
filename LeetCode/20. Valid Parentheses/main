@@ -1,0 +1,28 @@
+class Solution {
+    public boolean isValid(String s) {
+        Stack stack = new Stack();
+        Map map = new HashMap();
+        map.put(")","(");
+        map.put("]","[");
+        map.put("}","{");
+
+        if(s.length()%2 ==0){
+            String temp;
+            for (int i = 0; i < s.length(); i++) {
+                temp = s.substring(i,i+1);
+                if(map.containsKey(temp)){
+                    if(stack.isEmpty() || !stack.pop().equals(map.get(temp))){
+                        return false;
+                    }
+                }else{
+                    stack.push(temp);
+                }
+            }
+            return true;
+        }else{
+            return false;
+        }
+        
+        
+    }
+}
