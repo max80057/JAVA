@@ -6,7 +6,6 @@ class Solution {
         for(int i=1;i<nums.length;i++){
             if(nu==0){
                 moreOne=nums[i];
-                continue;
             }
             
             if(moreOne == nums[i]){
