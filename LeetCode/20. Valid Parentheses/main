@@ -18,11 +18,17 @@ class Solution {
                     stack.push(temp);
                 }
             }
-            return true;
+            
+            if(stack.isEmpty()){
+                return true;
+            }else{
+                return false;
+            }
+            
+            
         }else{
             return false;
         }
-        
         
     }
 }
