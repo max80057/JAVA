@@ -1,0 +1,26 @@
+您正在和您的朋友玩以下 Nim 遊戲：
+
+最初，桌子上有一堆石頭。
+你和你的朋友輪流輪流，你先走。
+在每一輪，輪到的人將從堆中取出 1 到 3 塊石頭。
+移走最後一塊石頭的人就是勝利者。
+給定n，堆中的棋子數量，true如果假設您和您的朋友都玩得最佳，則返回，否則返回false。
+
+
+Example 1:
+
+Input: n = 4
+Output: false
+Explanation: These are the possible outcomes:
+1. You remove 1 stone. Your friend removes 3 stones, including the last stone. Your friend wins.
+2. You remove 2 stones. Your friend removes 2 stones, including the last stone. Your friend wins.
+3. You remove 3 stones. Your friend removes the last stone. Your friend wins.
+In all outcomes, your friend wins.
+Example 2:
+
+Input: n = 1
+Output: true
+Example 3:
+
+Input: n = 2
+Output: true
