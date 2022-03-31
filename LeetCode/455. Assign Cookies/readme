@@ -1,0 +1,33 @@
+題目:
+Assume you are an awesome parent and want to give your children some cookies. But, you should give each child at most one cookie.
+Each child i has a greed factor g[i], which is the minimum size of a cookie that the child will be content with; 
+and each cookie j has a size s[j]. If s[j] >= g[i], we can assign the cookie j to the child i, 
+and the child i will be content. Your goal is to maximize the number of your content children and output the maximum number.
+假設你是一個很棒的父母，想給你的孩子一些餅乾。但是，你應該最多給每個孩子一個餅乾。
+每個孩子i都有一個貪婪因子g[i]，這是孩子會滿足的最小 cookie 大小；每個 cookiej都有一個 size s[j]。
+如果s[j] >= g[i]，我們可以將 cookie 分配給j孩子i，孩子i就會很滿足。您的目標是最大化內容子項的數量並輸出最大數量。
+
+
+程式思路:
+總體來說題目意思是每個孩子(i)都有希望的餅乾大小(g[i])，餅乾(s[j])要>=這個大小(g[i])孩子才會滿足，然後輸出滿足的孩子數量。
+
+所以先排序由因子最小的孩子跟用最小的餅乾開始發，
+最初想法是餅乾有限所以迴圈用餅乾數量，
+然後迴圈中判斷孩子滿不滿足，滿足就下一個孩子，不滿足就下一塊餅乾。
+
+後面發現孩子都滿足了還會繼續發，所以迴圈條件多限制孩子的數量。
+
+示例 1：
+
+輸入： g = [1,2,3], s = [1,1]
+輸出： 1
+解釋：你有 3 個孩子和 2 個 cookie。3 個孩子的貪婪因子是 1,2,3。
+即使你有 2 個 cookie，由於它們的大小都是 1，你只能讓貪婪因子為 1 的孩子滿足。
+您需要輸出 1。
+示例 2：
+
+輸入： g = [1,2], s = [1,2,3]
+輸出： 2
+解釋：你有 2 個孩子和 3 個 cookie。2 個孩子的貪婪因子是 1、2。
+你有 3 個餅乾，它們的大小足以滿足所有的孩子，
+你需要輸出 2。
