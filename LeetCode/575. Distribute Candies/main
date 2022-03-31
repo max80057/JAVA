@@ -1,0 +1,11 @@
+class Solution {
+    public int distributeCandies(int[] candyType) {
+        Set type = new HashSet();
+
+        for (int i = 0; i < candyType.length; i++) {
+            type.add(candyType[i]);
+        }
+        
+        return Math.min(candyType.length/2,type.size());
+    }
+}
